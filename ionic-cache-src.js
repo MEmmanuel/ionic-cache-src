@@ -6,7 +6,7 @@
 
     function ensureFunction(x, y) {
         return typeof x == 'function' ? x : y;
-    };
+    }
 
     function getBase64Image(img) {
         var canvas = document.createElement("canvas");
@@ -47,8 +47,8 @@
     }
 
     function makeProgressCircle($scope, $compile) {
-        return angular.element($compile('<div style="{{circleContainerStyle}}"><div round-progress  max="max"  current="progress"  color="{{color}}" bgcolor="{{bgcolor}}"  radius="{{radius}}"  stroke="{{stroke}}"  rounded="rounded" clockwise="clockwise" iterations="{{iterations}}"  animation="{{animation}}"></div></div>')($scope));
-    };
+        return angular.element($compile('<div style="{{circleContainerStyle}}"><div round-progress max="max" current="progress" color="{{color}}" bgcolor="{{bgcolor}}" radius="{{radius}}" stroke="{{stroke}}" rounded="rounded" clockwise="clockwise" iterations="{{iterations}}" animation="{{animation}}"></div></div>')($scope));
+    }
 
     var uiOnProgress = function(scope, element, $compile, uiData) {
         scope.progress = uiData.progress;
@@ -67,7 +67,7 @@
                 uiData.display = elm.css('display');
                 elm.css('display', 'none');
                 elm.after(progress_circle);
-            };
+            }
 
             if (window.cordova) {
                 if (scope.showProgressCircleInDevice) {
@@ -107,7 +107,7 @@
         for (var i = 0; i < 16; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
-    };
+    }
 
     function startsWith(str, arr) {
         for (var i = 0; i < arr.length; i++) {
@@ -117,20 +117,15 @@
             }
         }
         return false;
-    };
+    }
 
     function needDownload(path) {
-        if (startsWith(path, [
-                'http://',
-                'https://',
-                'ftp://'
-            ])) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
+        return startsWith(path, [
+            'http://',
+            'https://',
+            'ftp://'
+        ])
+    }
 
     var default_config = {
         interval: 200,
@@ -188,10 +183,10 @@
             return c;
         })
         .directive('cacheSrc',
-            ['$ionicPlatform', '$window', '$interval', '$timeout', '$compile', '$cacheSrc', '$cordovaTransfer',
-                '$localStorage', '$cordovaFile',
-                function($ionicPlatform, $window, $interval, $timeout, $compile, $cacheSrc, $cordovaTransfer,
-                         $localStorage, $cordovaFile) {
+            ['$ionicPlatform', '$window', '$interval', '$timeout', '$compile', '$cacheSrc',
+                '$cordovaTransfer', '$localStorage',
+                function($ionicPlatform, $window, $interval, $timeout, $compile, $cacheSrc,
+                         $cordovaTransfer, $localStorage) {
             return {
                 restrict: 'A',
                 priority: 99,
@@ -200,14 +195,11 @@
                     'onFinish': '=?',
                     'onError': '=?',
                     'onStart': '=?',
-                    //
                     'uiOnStart': '=?',
                     'uiOnProgress': '=?',
                     'uiOnFinish': '=?'
                 },
                 link: function(scope, element, attrs) {
-
-
                     // debugger;
                     extend(scope, $cacheSrc);
                     for (var k in attrs) {
@@ -222,7 +214,6 @@
                         scope.encodeUri = false;
                     else
                         scope.encodeUri = $cacheSrc.encodeUri;
-                    // console.log("encodeURI:"+scope.encodeUri);
                     scope.onProgress = ensureFunction(scope.onProgress, angular.noop);
                     scope.onFinish = ensureFunction(scope.onFinish, angular.noop);
                     scope.onError = ensureFunction(scope.onError, angular.noop);
@@ -230,9 +221,6 @@
                     scope.uiOnProgress = ensureFunction(scope.uiOnProgress, angular.noop); //use default ones
                     scope.uiOnFinish = ensureFunction(scope.uiOnFinish, angular.noop);
                     scope.uiOnStart = ensureFunction(scope.uiOnStart, angular.noop);
-
-
-                    
 
                     function addSrcWithoutFinish(result) {
                         if (scope.srcIs == 'background') {
@@ -245,7 +233,7 @@
                     function addSrc(result) {
                         addSrcWithoutFinish(result);
                         scope.onFinish(result);
-                    };
+                    }
                     if ($window.cordova) {
                         var getCacheDir = function() {
                             if (window.device)
@@ -273,18 +261,7 @@
                                     console.log('Error Occurs: ' + E.exception + "\nCode:" + E.code + "\nSrc:" + E.source);
                                     if(uiData)
                                         scope.uiOnFinish(scope, element, $compile, uiData);
-                                    addSrcWithoutFinish(E.source);                                    
-                                    // var b64 = getBase64Image(getElement(element));
-                                    // if(b64.length > 200)
-                                    //     $cordovaFile
-                                    //     .writeFile(getCacheDir(), fileName, b64, true)
-                                    //     .then(function(){
-                                    //         cache[attrs.cacheSrc] = fileName;
-                                    //         if (scope.expire !== Infinity) {
-                                    //             create_time[attrs.cacheSrc] = Date.now();
-                                    //         }                                        
-                                    //         addSrc(getCacheDir() + fileName);
-                                    //     },scope.onError);                                                       
+                                    addSrcWithoutFinish(E.source);
                                 } else {
                                     scope.onError(E);
                                 }
@@ -344,14 +321,11 @@
                                     scope.uiOnProgress(scope, element, $compile, uiData);
                                     scope.onProgress(uiData.progress);
                                 });
-
                         }
 
                         function fetchCache() {
                             addSrc(getCacheDir() + cache[attrs.cacheSrc]);
                         }
-
-
 
                         $ionicPlatform
                             .ready(function() {
@@ -407,10 +381,9 @@
                                 }
                             }
                         });
-
                     }
-
                 }
             };
-        }]);
+        }
+    ]);
 }());
