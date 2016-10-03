@@ -16,7 +16,7 @@
         ctx.drawImage(img, 0, 0);
         return canvas.toDataURL();
     }
-    
+
     // For the Default Progress Circle
     //****************************************************************************************************//
     var default_circle_style = {
@@ -146,9 +146,8 @@
     angular
         .module('ionic-cache-src', [
             'ionic',
-            'angular-svg-round-progress',
-            'ngCordova',
-            'ngStorage'
+            'ionic.native',
+            'angular-svg-round-progress'
         ])
         .provider('$cacheSrc', function() {
             this.config = default_config;
@@ -188,7 +187,11 @@
 
             return c;
         })
-        .directive('cacheSrc', function($ionicPlatform, $window, $interval, $timeout, $compile, $cacheSrc, $cordovaFileTransfer, $localStorage,$cordovaFile) {
+        .directive('cacheSrc',
+            ['$ionicPlatform', '$window', '$interval', '$timeout', '$compile', '$cacheSrc', '$cordovaTransfer',
+                '$localStorage', '$cordovaFile',
+                function($ionicPlatform, $window, $interval, $timeout, $compile, $cacheSrc, $cordovaTransfer,
+                         $localStorage, $cordovaFile) {
             return {
                 restrict: 'A',
                 priority: 99,
@@ -197,7 +200,7 @@
                     'onFinish': '=?',
                     'onError': '=?',
                     'onStart': '=?',
-                    // 
+                    //
                     'uiOnStart': '=?',
                     'uiOnProgress': '=?',
                     'uiOnFinish': '=?'
@@ -291,7 +294,8 @@
                         function fetchRemoteWithoutLoading() {
                             var ext = '.' + attrs.cacheSrc.split('.').pop();
                             var fileName = id() + ext;
-                            $cordovaFileTransfer
+                            var transfer = new $cordovaTransfer();
+                            transfer
                                 .download(attrs.cacheSrc, getCacheDir() + fileName, {
                                     encodeURI: scope.encodeUri,
                                     chunkedMode: false,
@@ -317,15 +321,17 @@
 
                             var ext = '.' + attrs.cacheSrc.split('.').pop();
                             var fileName = id() + ext;
-                            $cordovaFileTransfer
-                                .download(attrs.cacheSrc, getCacheDir() + fileName, {
-                                    encodeURI: scope.encodeUri,
-                                    chunkedMode: false,
-                                    headers: {
-
-                                        Connection: "close"
-                                    }
-                                }, true)
+                            var transfer = new $cordovaTransfer();
+                            transfer
+                                .download(attrs.cacheSrc, getCacheDir() + fileName, true)
+                                // {
+                                //           encodeURI: scope.encodeUri,
+                                //           chunkedMode: false,
+                                //           headers: {
+                                //
+                                //               Connection: "close"
+                                //           }
+                                //       }, true)
                                 .then(function() {
                                     cache[attrs.cacheSrc] = fileName;
                                     if (scope.expire !== Infinity) {
@@ -406,5 +412,5 @@
 
                 }
             };
-        });
+        }]);
 }());
