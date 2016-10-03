@@ -58,14 +58,11 @@ and it will take the rest work for you.
 bower install ionic-cache-src
 ```
 
-- it depends on [ngStorage](https://github.com/gsklee/ngStorage), [ngCordova](http://ngcordova.com/), [angular-svg-round-progress](https://github.com/crisbeto/angular-svg-round-progressbar) so you have to load them both in you `index.html`
+- it depends on [angular-svg-round-progress](https://github.com/crisbeto/angular-svg-round-progressbar) so you have to load them both in you `index.html`
 
 
 ```html
-<script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
 <script src="cordova.js"></script>
-<script src="cordova_plugins.js"></script> <!-- This one is optional -->
-<script src="lib/ngstorage/ngStorage.min.js"></script>
 <script src="lib/angular-svg-round-progressbar/build/roundProgress.min.js"></script>
 <script src="lib/ionic-cache-src/ionic-cache-src.js"></script>
 ```
@@ -75,6 +72,8 @@ bower install ionic-cache-src
 ```shell
 cordova plugin add cordova-plugin-file cordova-plugin-file-transfer
 ```
+
+- (todo: doc to update) You need ionic native too
 
 - add `ionic-cache-src` to your angular module declaration dependencies
 
