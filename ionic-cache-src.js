@@ -8,7 +8,6 @@
         return typeof x == 'function' ? x : y;
     };
 
-
     function getBase64Image(img) {
         var canvas = document.createElement("canvas");
         canvas.width = img.width;
@@ -250,7 +249,7 @@
                                 if (window.cordova.file) {
                                     switch (device.platform) {
                                         case 'iOS':
-                                            return $window.cordova.file.documentsDirectory;
+                                            return $window.cordova.file.dataDirectory;
                                         case 'Android':
                                             return $window.cordova.file.dataDirectory;
                                         case 'windows':
